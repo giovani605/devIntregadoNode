@@ -1,11 +1,9 @@
-var express = require('express');
-var app = express();
+const app = require("./app");
+const http = require("http");
 var bancoDados = require("./bancoDados");
 
-app.get('/teste',function(req,res){
-    console.log("teste funcionando");
-    res.status(200).send("oi");
-})
-app.listen(3000,function(){
+const server = http.createServer(app);
+
+server.listen(3000,function(){
     console.log("Servidor rodando");
 });
