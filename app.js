@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 
+var contas = require("./api/rotas/contas/ContasREST");
+var cartoes = require("./api/rotas/cartoes/CartaoRestApi");
+
 // para poder mandar dados para o angualr
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -12,11 +15,8 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/teste', function (req, res, next) {
-    res.status(200).json({
-        "msg" : "mensagem"
-    });
-});
+app.use('/contas', contas);
+app.use('/cartoes', cartoes);
 
 
 module.exports = app;
