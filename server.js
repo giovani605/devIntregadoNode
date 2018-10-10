@@ -1,6 +1,6 @@
 const app = require("./app");
 const http = require("http");
-var bancoDados = require("./bancoDados");
+var bancoDados = require("./model/bancoDados");
 
 const server = http.createServer(app);
 
