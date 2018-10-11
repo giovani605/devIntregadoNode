@@ -10,23 +10,11 @@ var con = mysql.createConnection({
 
 con.connect(function (err) {
   if (err) throw err;
-  console.log("Connected!");
+  console.log("Conectado ao banco de dados!");
 });
 
-async function queryTeste(callback) {
-  console.log("chameii");
-  return new Promise((fulfill, reject) => {
-    con.query("SELECT * FROM vampira.Cartao", function (err, result, fields) {
-      if (err) throw reject(err);
-      console.log("volto o banco");
-      fulfill((result));
-      callback(result);
-    })
-  });
-}
-
 // reduzir a funcao de cima
-function queryTesteLivre(callback) {
+function queryTeste(callback) {
   console.log("chameii");
   con.query("SELECT * FROM vampira.Cartao", function (err, result, fields) {
     if (err) throw (err);
@@ -36,6 +24,4 @@ function queryTesteLivre(callback) {
 }
 
 
-
 exports.queryTeste = queryTeste;
-exports.queryTesteLivre = queryTesteLivre;
