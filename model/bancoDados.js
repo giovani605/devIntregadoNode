@@ -22,6 +22,21 @@ function queryTeste(callback) {
     callback(result);
   });
 }
+function inserirAspas(a) {
+  return "'" + a + "'";
+}
+
+function buscarUsuario(user, callback) {
+  var query = "SELECT * FROM vampira.Conta where usuario = " + inserirAspas(user);
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    var usuario = JSON.parse(JSON.stringify(result[0]));
+    console.log(usuario);
+    callback(usuario);
+  });
+}
 
 
 exports.queryTeste = queryTeste;
+exports.buscarUsuario = buscarUsuario;

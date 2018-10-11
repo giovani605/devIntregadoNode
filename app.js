@@ -1,11 +1,12 @@
 var express = require('express');
 var app = express();
-
+var bodyParser = require('body-parser');
 var contas = require("./api/rotas/contas/ContasREST");
 var cartoes = require("./api/rotas/cartoes/CartaoRestApi");
 var auth = require("./api/rotas/auth/AuthREST");
 
-// para poder mandar dados para o angualr
+// para poder mandar dados para o angular
+app.use(bodyParser.json());
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
@@ -16,7 +17,6 @@ app.use((req, res, next) => {
         "Access-Control-Allow-Methods",
         "GET, POST, PATCH, PUT, DELETE, OPTIONS"
     );
-    next()
     console.log("Headers funcionando");
     next();
 });
