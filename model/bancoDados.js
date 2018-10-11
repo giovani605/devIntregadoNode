@@ -1,3 +1,4 @@
+"use strict"
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
@@ -7,7 +8,21 @@ var con = mysql.createConnection({
   password: "@vampira#"
 });
 
- con.connect(function(err) {
-   if (err) throw err;
-   console.log("Connected!");
- });
+con.connect(function (err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
+
+async function queryTeste(callback) {
+  console.log("chameii");
+  return new Promise((fulfill, reject) => {
+    con.query("SELECT * FROM vampira.Cartao", function (err, result, fields) {
+      if (err) throw reject(err);
+      console.log("volto o banco");
+      fulfill((result));
+      callback(result);
+    })
+  });
+}
+
+exports.queryTeste = queryTeste;

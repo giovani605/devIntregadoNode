@@ -4,6 +4,6 @@ var bancoDados = require("./model/bancoDados");
 
 const server = http.createServer(app);
 
-server.listen(3000,function(){
+server.listen(3001,function(){
     console.log("Servidor rodando");
 });
