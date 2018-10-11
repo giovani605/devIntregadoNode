@@ -18,7 +18,8 @@ router.post("/login", (req, res, next) => {
             res.status(200).json({
                 "loginFlag" : true,
                 "mensagem": "login sucessfull",
-                "token": "gerar depois"
+                "token": "gerar depois",
+                "User" : usuario
             });
         } else {
             console.log("login falho" );

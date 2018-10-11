@@ -37,6 +37,19 @@ function buscarUsuario(user, callback) {
   });
 }
 
+function buscarCartoesUsuario(userId, callback) {
+  var query = "SELECT * FROM vampira.Cartao where Conta_pertence = " + inserirAspas(userId);
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    var cartoes = JSON.parse(JSON.stringify(result));
+    console.log(cartoes);
+    callback(cartoes);
+  });
+}
+
+
 
 exports.queryTeste = queryTeste;
 exports.buscarUsuario = buscarUsuario;
+exports.buscarCartoesUsuario = buscarCartoesUsuario;
