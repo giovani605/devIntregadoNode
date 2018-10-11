@@ -25,4 +25,17 @@ async function queryTeste(callback) {
   });
 }
 
+// reduzir a funcao de cima
+function queryTesteLivre(callback) {
+  console.log("chameii");
+  con.query("SELECT * FROM vampira.Cartao", function (err, result, fields) {
+    if (err) throw (err);
+    console.log("volto o banco");
+    callback(result);
+  });
+}
+
+
+
 exports.queryTeste = queryTeste;
+exports.queryTesteLivre = queryTesteLivre;
