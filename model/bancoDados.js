@@ -26,6 +26,27 @@ function inserirAspas(a) {
   return "'" + a + "'";
 }
 
+// PROTOTIPO DE FUNCOES PARA ACESSAR O BANCO
+// a funcao vai ter como entrada um valor e
+// uma funcao de callback que sera chamada depois que os dados retornarem do banco
+function queryPrototipo(valor, callback){
+  // Defina a query a ser executada
+  var query = "SELECT * FROM vampira.Conta where usuario = " + inserirAspas(valor);
+  con.query(query, function (err, result, fields) {
+    // Essa parte aqui é executada quando a query volta do banco
+    if (err) throw (err);
+
+    // As vezes é interresante processar/ajeitar como os dados vem do banco
+    var usuario = JSON.parse(JSON.stringify(result[0]));
+    
+    // No final vc chama  a funcao de callback com o resultado da query
+    callback(usuario);
+  });
+}
+
+// Comentario
+
+
 function buscarUsuario(user, callback) {
   var query = "SELECT * FROM vampira.Conta where usuario = " + inserirAspas(user);
   console.log(query);
