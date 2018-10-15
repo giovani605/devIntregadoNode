@@ -29,7 +29,7 @@ function inserirAspas(a) {
 // PROTOTIPO DE FUNCOES PARA ACESSAR O BANCO
 // a funcao vai ter como entrada um valor e
 // uma funcao de callback que sera chamada depois que os dados retornarem do banco
-function queryPrototipo(valor, callback){
+function queryPrototipo(valor, callback) {
   // Defina a query a ser executada
   var query = "SELECT * FROM vampira.Conta where usuario = " + inserirAspas(valor);
   con.query(query, function (err, result, fields) {
@@ -38,7 +38,7 @@ function queryPrototipo(valor, callback){
 
     // As vezes é interresante processar/ajeitar como os dados vem do banco
     var usuario = JSON.parse(JSON.stringify(result[0]));
-    
+
     // No final vc chama  a funcao de callback com o resultado da query
     callback(usuario);
   });
@@ -70,9 +70,22 @@ function buscarCartoesUsuario(userId, callback) {
 }
 
 
+function formatarData(data){
+    var a = "('";
+    a += data.getFullYear();
+    a+="-";
+    a+=Number(data.getMonth()+1);
+    a+="-";
+    a+=data.getDate();
+    a+="')";
+    console.log("resultado data : " + a);
+    return a;
+}
+
+
 // funcoes de transacoes
-function buscarTransacoesPeriodo(idCartao,inicio,fim,callback){
-  var query = "SELECT * FROM vampira.Transacao where Cartao_origem = " + inserirAspas(idCartao);
+function buscarTransacoesPeriodo(idCartao, inicio, fim, callback) {
+  var query = "SELECT * FROM vampira.Transacao where Cartao_origem = " + inserirAspas(idCartao) + " and data_pagamento between " + formatarData(inicio) + " and " + formatarData(fim) ;
   console.log(query);
   con.query(query, function (err, result, fields) {
     if (err) throw (err);
