@@ -70,7 +70,20 @@ function buscarCartoesUsuario(userId, callback) {
 }
 
 
+// funcoes de transacoes
+function buscarTransacoesPeriodo(idCartao,inicio,fim,callback){
+  var query = "SELECT * FROM vampira.Transacao where Cartao_origem = " + inserirAspas(idCartao);
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    var transacoes = JSON.parse(JSON.stringify(result));
+    console.log(transacoes);
+    callback(transacoes);
+  });
+}
+
 
 exports.queryTeste = queryTeste;
 exports.buscarUsuario = buscarUsuario;
 exports.buscarCartoesUsuario = buscarCartoesUsuario;
+exports.buscarTransacoesPeriodo = buscarTransacoesPeriodo;
