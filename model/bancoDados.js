@@ -115,6 +115,20 @@ function buscarUltimoCacheSaldo(idCartao, callback) {
   });
 }
 
+// funcoes cache
+function inserirCacheSaldo(idCartao, saldoAtual, inicio, dataFim,callback) {
+
+  var query = "INSERT INTO vampira.cacheSaldo" +
+     "(Cartao_idCartao,periodo_inicio,periodo_final,saldo)" +
+     "VALUES(" + idCartao + "," + formatarData(inicio) + "," + formatarData(dataFim) + "," + saldoAtual + ")";
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    console.log("sucesso em salvar o cache");
+    callback("sucesso");
+  });
+}
+
 
 exports.queryTeste = queryTeste;
 exports.buscarUsuario = buscarUsuario;
@@ -122,3 +136,4 @@ exports.buscarCartoesUsuario = buscarCartoesUsuario;
 exports.buscarTransacoesPeriodo = buscarTransacoesPeriodo;
 exports.buscarUltimoCacheSaldo = buscarUltimoCacheSaldo;
 exports.atualizarSaldoCartao = atualizarSaldoCartao;
+exports.inserirCacheSaldo = inserirCacheSaldo;

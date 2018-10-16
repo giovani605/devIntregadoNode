@@ -60,7 +60,7 @@ router.post("/periodo/:id", (req, res, next) => {
     recuperarSaldoAtual(idCartao, (dados) => {
         var saldoFinal = dados["saldo"];
         var dataInicio = new Date();
-        dataInicio.setDate(dataInicio.getDate()+1);
+        dataInicio.setDate(dataInicio.getDate() + 1);
         console.log("data de inicio : " + dataInicio);
         console.log("data de final : " + dataFinal);
         console.log("saldo Cache : " + saldoFinal);
@@ -74,6 +74,18 @@ router.post("/periodo/:id", (req, res, next) => {
 
     });
 
+});
+
+router.post("/cache/:id", (req, res, next) => {
+    var dataFinal = new Date(req.body.dataFinal);
+    var idCartao = req.params.id;
+    console.log("id" + idCartao);
+    criarCacheSaldo(idCartao, dataFinal, (dados) => {
+        res.status(200).send({
+            "mensagem": "ok",
+            "dados": dados
+        });
+    });
 });
 
 
@@ -144,16 +156,43 @@ function recuperarSaldoAtual(idCartao, callback) {
     });
 }
 // TODO
-function criarCacheSaldo(idCartao, inicio, fim, callback) {
+function criarCacheSaldo(idCartao, dataFim, callback) {
 
     // consultar transações por periodo
-    banco.buscarTransacoesPeriodo(idCartao, inicio, fim, (transacoes) => {
-        var total = somarSaldo(transacoes)
-        // coisas a fazer
-        console.log("Calculo total: " + total);
-        // salvar no banco esse cache
+    recuperarCacheSaldoRecente(idCartao, (resultado) => {
+        var saldoSalvo;
+        var inicio;
+        if (!resultado) {
+            var saldoSalvo = 0;
+            var inicio = new Date('2012-01-01');
+        } else {
+            var saldoSalvo = resultado["saldo"];
+            var inicio = new Date(resultado["periodo_final"]);
+        }
+        // com base nisso .... 
+        console.log("Data de inicio " + inicio);
+        // soma um dia para frente
+        inicio.setDate(inicio.getDate() + 1);
+        banco.buscarTransacoesPeriodo(idCartao, inicio, dataFim, (transacoes) => {
+            var total = somarSaldo(transacoes);
+            console.log(saldoSalvo);
+            var saldoAtual = Number(saldoSalvo) + Number(total);
+            console.log(saldoAtual);
+            // posso ate atualizar isso no database
+            banco.atualizarSaldoCartao(idCartao, saldoAtual);
+            banco.inserirCacheSaldo(idCartao, saldoAtual, inicio, dataFim, (resposta) => {
+                callback({
+                    "sucesso": resposta,
+                    "saldo": saldoAtual,
+                });
+            });
+            // var final = {
+            //     "saldo": saldoAtual,
+            //     "trasacoes": transacoes,
+            //     "cache": resultado
+            // }
 
-        callback(total);
+        });
     });
 
 }
