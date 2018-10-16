@@ -5,6 +5,7 @@ const router = express.Router();
 var banco = require("../../../model/bancoDados");
 
 // nesse arquivo fica a rota que lida com os cartoes
+//recuperar o dado do cartao
 router.get("/:id", (req, res, next) => {
     recuperarSaldoAtual(req.params.id, (dados) => {
         res.status(200).send({
@@ -14,8 +15,10 @@ router.get("/:id", (req, res, next) => {
 
     });
 });
-router.get("/user/:id", (req, res, next) => {
-    banco.buscarCartoesUsuario(req.params.id, (dados) => {
+
+// Atualiza o saldo do cartao
+router.post("/atualizar/:id", (req, res, next) => {
+    recuperarSaldoAtual(req.params.id, (dados) => {
         res.status(200).send({
             "mensagem": "ok",
             "dados": dados
@@ -24,6 +27,20 @@ router.get("/user/:id", (req, res, next) => {
     });
 });
 
+
+router.get("/user/:id", (req, res, next) => {
+
+    var resposta = {};
+    banco.buscarCartoesUsuario(req.params.id, (dados) => {
+        res.status(200).send({
+            "mensagem": "ok",
+            "dados": dados
+        });
+
+    });
+});
+
+// isso é so um teste
 router.post("/transacao", (req, res, next) => {
     var idCartao = req.body.idCartao;
     console.log("id" + JSON.stringify(req.body));
@@ -34,6 +51,31 @@ router.post("/transacao", (req, res, next) => {
         });
     });
 });
+
+// isso é so um teste
+router.post("/periodo/:id", (req, res, next) => {
+    var dataFinal = new Date(req.body.dataFinal);
+    var idCartao = req.params.id
+    console.log("id" + JSON.stringify(req.body));
+    recuperarSaldoAtual(idCartao, (dados) => {
+        var saldoFinal = dados["saldo"];
+        var dataInicio = new Date();
+        dataInicio.setDate(dataInicio.getDate()+1);
+        console.log("data de inicio : " + dataInicio);
+        console.log("data de final : " + dataFinal);
+        console.log("saldo Cache : " + saldoFinal);
+        calcularSaldoPeriodo(idCartao, dataInicio, dataFinal, (total) => {
+            saldoFinal += Number(total);
+            res.status(200).send({
+                "mensagem": "ok",
+                "total": saldoFinal
+            });
+        });
+
+    });
+
+});
+
 
 // Fazer essa funcao
 // Tem varios placeholders
@@ -90,6 +132,8 @@ function recuperarSaldoAtual(idCartao, callback) {
             var saldoAtual = Number(saldoSalvo) + Number(total);
             console.log(saldoAtual);
             // posso ate atualizar isso no database
+            banco.atualizarSaldoCartao(idCartao, saldoAtual);
+
             var final = {
                 "saldo": saldoAtual,
                 "trasacoes": transacoes,

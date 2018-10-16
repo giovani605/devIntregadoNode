@@ -58,6 +58,7 @@ function buscarUsuario(user, callback) {
   });
 }
 
+// funcoes de cartaoes
 function buscarCartoesUsuario(userId, callback) {
   var query = "SELECT * FROM vampira.Cartao where Conta_pertence = " + inserirAspas(userId);
   console.log(query);
@@ -68,24 +69,31 @@ function buscarCartoesUsuario(userId, callback) {
     callback(cartoes);
   });
 }
+function atualizarSaldoCartao(idCartao, saldoAtual) {
+  var query = "UPDATE vampira.Cartao SET saldo = " + saldoAtual + "  where idCartao =" + inserirAspas(idCartao);
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    console.log(result);
+  });
+}
 
 
-function formatarData(data){
-    var a = "('";
-    a += data.getFullYear();
-    a+="-";
-    a+=Number(data.getMonth()+1);
-    a+="-";
-    a+=data.getDate();
-    a+="')";
-    console.log("resultado data : " + a);
-    return a;
+function formatarData(data) {
+  var a = "('";
+  a += data.getFullYear();
+  a += "-";
+  a += Number(data.getMonth() + 1);
+  a += "-";
+  a += data.getDate();
+  a += "')";
+  return a;
 }
 
 
 // funcoes de transacoes
 function buscarTransacoesPeriodo(idCartao, inicio, fim, callback) {
-  var query = "SELECT * FROM vampira.Transacao where Cartao_origem = " + inserirAspas(idCartao) + " and data_pagamento between " + formatarData(inicio) + " and " + formatarData(fim) ;
+  var query = "SELECT * FROM vampira.Transacao where Cartao_origem = " + inserirAspas(idCartao) + " and data_pagamento between " + formatarData(inicio) + " and " + formatarData(fim);
   console.log(query);
   con.query(query, function (err, result, fields) {
     if (err) throw (err);
@@ -101,7 +109,7 @@ function buscarUltimoCacheSaldo(idCartao, callback) {
   con.query(query, function (err, result, fields) {
     if (err) throw (err);
     var transacoes = JSON.parse(JSON.stringify(result));
-    console.log("recuperar Cache " );
+    console.log("recuperar Cache ");
     console.log(transacoes[0]);
     callback(transacoes[0]);
   });
@@ -113,3 +121,4 @@ exports.buscarUsuario = buscarUsuario;
 exports.buscarCartoesUsuario = buscarCartoesUsuario;
 exports.buscarTransacoesPeriodo = buscarTransacoesPeriodo;
 exports.buscarUltimoCacheSaldo = buscarUltimoCacheSaldo;
+exports.atualizarSaldoCartao = atualizarSaldoCartao;
