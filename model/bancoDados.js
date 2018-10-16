@@ -26,6 +26,7 @@ function inserirAspas(a) {
   return "'" + a + "'";
 }
 
+// Bura exemplo aqui
 // PROTOTIPO DE FUNCOES PARA ACESSAR O BANCO
 // a funcao vai ter como entrada um valor e
 // uma funcao de callback que sera chamada depois que os dados retornarem do banco
