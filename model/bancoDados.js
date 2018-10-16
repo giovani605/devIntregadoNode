@@ -95,8 +95,21 @@ function buscarTransacoesPeriodo(idCartao, inicio, fim, callback) {
   });
 }
 
+function buscarUltimoCacheSaldo(idCartao, callback) {
+  var query = "select *,max(periodo_final) from  vampira.cacheSaldo where Cartao_idCartao = " + idCartao;
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    var transacoes = JSON.parse(JSON.stringify(result));
+    console.log("recuperar Cache " );
+    console.log(transacoes[0]);
+    callback(transacoes[0]);
+  });
+}
+
 
 exports.queryTeste = queryTeste;
 exports.buscarUsuario = buscarUsuario;
 exports.buscarCartoesUsuario = buscarCartoesUsuario;
 exports.buscarTransacoesPeriodo = buscarTransacoesPeriodo;
+exports.buscarUltimoCacheSaldo = buscarUltimoCacheSaldo;
