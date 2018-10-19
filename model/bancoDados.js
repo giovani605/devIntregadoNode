@@ -47,6 +47,19 @@ function queryPrototipo(valor, callback) {
 
 // Comentario
 
+function recuperarTodosClientes(callback) {
+  var query = "SELECT * FROM vampira.Conta ";
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    var usuario = JSON.parse(JSON.stringify(result));
+    console.log(usuario);
+    callback(usuario);
+  });
+}
+
+
+
 
 function buscarUsuario(user, callback) {
   var query = "SELECT * FROM vampira.Conta where usuario = " + inserirAspas(user);
@@ -58,6 +71,9 @@ function buscarUsuario(user, callback) {
     callback(usuario);
   });
 }
+
+
+
 
 // funcoes de cartaoes
 function buscarCartoesUsuario(userId, callback) {
@@ -116,12 +132,55 @@ function buscarUltimoCacheSaldo(idCartao, callback) {
   });
 }
 
+function inserirConta(usuario, senha, callback) {
+  var query = "  INSERT INTO `vampira`.`Conta`(`nome`,`usuario`, `senha`)"
+    + "VALUES(" + inserirAspas(usuario) + "," + inserirAspas(usuario) + "," + inserirAspas(senha) + ")";
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    console.log("Inserido conta");
+    callback("sucesso");
+  });
+}
+
+function inserirCartao(contaId, desc, callback) {
+  var query = "INSERT INTO `vampira`.`Cartao` (`saldo`,`Conta_pertence`,`Descricao`)"
+    + "VALUES(0," + contaId + "," + inserirAspas(desc) + ");"
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    console.log("Inserido conta");
+    callback("sucesso");
+  });
+}
+
+function inserirTransacao(cartaoId, valor, dataCriacao, dataPagamento,
+  destino, tipo, callback) {
+  var query = "INSERT INTO `vampira`.`Transacao`(`Cartao_origem`,`valor`,`destino`,`data_criacao`,`data_pagamento`,`Tipo`)" +
+    "VALUES(" + cartaoId + "," + valor + "," + inserirAspas(destino) +
+    "," + formatarData(dataCriacao) + "," + formatarData(dataPagamento) + "," + tipo + ");"
+  console.log(query);
+  con.query(query, function (err, result, fields) {
+    if (err) throw (err);
+    console.log("Inserido Transacao " + query);
+    callback("sucesso");
+  });
+}
+
+
+
+
+
+
+
+
+
 // funcoes cache
-function inserirCacheSaldo(idCartao, saldoAtual, inicio, dataFim,callback) {
+function inserirCacheSaldo(idCartao, saldoAtual, inicio, dataFim, callback) {
 
   var query = "INSERT INTO vampira.cacheSaldo" +
-     "(Cartao_idCartao,periodo_inicio,periodo_final,saldo)" +
-     "VALUES(" + idCartao + "," + formatarData(inicio) + "," + formatarData(dataFim) + "," + saldoAtual + ")";
+    "(Cartao_idCartao,periodo_inicio,periodo_final,saldo)" +
+    "VALUES(" + idCartao + "," + formatarData(inicio) + "," + formatarData(dataFim) + "," + saldoAtual + ")";
   console.log(query);
   con.query(query, function (err, result, fields) {
     if (err) throw (err);
@@ -138,3 +197,7 @@ exports.buscarTransacoesPeriodo = buscarTransacoesPeriodo;
 exports.buscarUltimoCacheSaldo = buscarUltimoCacheSaldo;
 exports.atualizarSaldoCartao = atualizarSaldoCartao;
 exports.inserirCacheSaldo = inserirCacheSaldo;
+exports.inserirConta = inserirConta;
+exports.inserirCartao = inserirCartao;
+exports.inserirTransacao = inserirTransacao;
+exports.recuperarTodosClientes = recuperarTodosClientes;
