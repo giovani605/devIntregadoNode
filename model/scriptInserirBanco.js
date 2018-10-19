@@ -11,7 +11,7 @@ var arrayNomes = ["ana", "alexandre", "bura", "giovani", "egon", "priscila"];
 
 for (var a = 0; a < 10; a++) {
     // inserir usuario;
-    // teste
+    // testegit 
     inserirUsuario();
     // recuperar o nome do usuario e os dados
     // inserir cartoes
